@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>page2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Playfair+Display:wght@700&family=Great+Vibes&family=Cinzel:wght@700&family=Marck+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;width:100vw;height:100vh;overflow:hidden;position:relative;font-family:'Cormorant Garamond',serif}
+.title{position:absolute;top:6vh;left:50%;transform:translateX(-50%);color:#fff;font-size:clamp(42px,8vw,120px)}
+.word{position:absolute;left:50%;color:#fff;font-size:clamp(44px,10vw,170px);white-space:nowrap;text-shadow:0 0 20px rgba(255,255,255,.5)}
+.heart-container{position:absolute;left:50%;bottom:7vh;transform:translateX(-50%);z-index:100;transition:bottom 2.5s ease}
+.heart-scale{
+transform:scale(1);
+transform-origin:center center;
+will-change:transform;
+}
+.heart{
+font-size:24px;
+display:block;
+filter:drop-shadow(0 0 10px #ff69b4);
+backface-visibility:hidden;
+}
+.heart.final{animation:glow 2s infinite}
+@keyframes glow{
+50%{filter:drop-shadow(0 0 20px #ff69b4) drop-shadow(0 0 40px #ff69b4) drop-shadow(0 0 80px #ff69b4)}
+}
+.btn{
+position:absolute;
+left:50%;
+bottom:6vh;
+transform:translateX(-50%);
+background:#fff;
+color:#000;
+border-radius:999px;
+padding:14px 32px;
+font-size:20px;
+cursor:pointer;
+display:none;
+opacity:0;
+transition:opacity 2s ease;
+z-index:200;
+width:auto;
+max-width:90vw;
+white-space:nowrap;
+text-align:center;
+}
+.btn.show{
+display:block;
+opacity:1;
+}
+
+.flash{
+position:fixed;
+left:50%;
+top:50%;
+width:20px;
+height:20px;
+border-radius:50%;
+background:#fff;
+transform:translate(-50%,-50%) scale(0);
+pointer-events:none;
+z-index:9999;
+}
+.flash.active{
+animation:flashExpand 1s forwards ease-out;
+}
+@keyframes flashExpand{
+0%{transform:translate(-50%,-50%) scale(0);opacity:1}
+100%{transform:translate(-50%,-50%) scale(250);opacity:1}
+}
+
+
+@media (max-width:768px){
+ .heart{font-size:18px;}
+ .btn{
+   bottom:4vh;
+   font-size:18px;
+   padding:12px 24px;
+   max-width:92vw;
+ }
+}
+</style>
+</head>
+<body>
+<div class="title">ТЫ САМАЯ...</div>
+
+<div class="heart-container" id="heartContainer">
+  <div class="heart-scale" id="heartScale">
+    <div class="heart" id="heart">❤️</div>
+  </div>
+</div>
+
+<div class="btn" id="btn">ПРОДОЛЖИТЬ</div>
+<div class="flash" id="flash"></div>
+<audio id="flashSound" src="flash.mp3(1).mp3" preload="auto"></audio>
+
+<script>
+const words=["Красивая","Умная","Добрая","Любящая"];
+const fonts=[
+"'Playfair Display', serif",
+"'Great Vibes', cursive",
+"'Cinzel', serif",
+"'Marck Script', cursive"
+];
+const heart=document.getElementById("heart");
+const heartScaleEl=document.getElementById("heartScale");
+const heartContainer=document.getElementById("heartContainer");
+const btn=document.getElementById("btn");
+
+let scale=1;
+let completed=0;
+
+function animateWord(text,index){
+ const el=document.createElement("div");
+ el.className="word";
+ el.textContent=text; el.style.fontFamily=fonts[index % fonts.length];
+ document.body.appendChild(el);
+
+ const startX=index%2===0?-800:window.innerWidth+800;
+ const stopY=window.innerHeight*0.42;
+ let start=null;
+
+ function frame(t){
+   if(!start) start=t;
+   const e=t-start;
+
+   const rect=heart.getBoundingClientRect();
+   const heartX=rect.left+rect.width/2;
+   const heartY=rect.top+rect.height/2;
+
+   let x,y,s=1;
+
+   if(e<1400){
+     let p=e/1400;
+     x=startX+(window.innerWidth/2-startX)*p;
+     y=stopY;
+   }else if(e<3400){
+     x=window.innerWidth/2;
+     y=stopY;
+   }else if(e<5400){
+     let p=(e-3400)/2000;
+     x=window.innerWidth/2;
+     y=stopY+(heartY-stopY)*p;
+     s=1-p;
+   }else{
+     el.remove();
+     scale*=1.45;
+     heartScaleEl.style.transform='scale('+scale+')';
+
+     completed++;
+     if(completed===4){
+       setTimeout(finalStage,700);
+     }
+     return;
+   }
+
+   el.style.left=x+'px';
+   el.style.top=y+'px';
+   el.style.transform='translate(-50%,-50%) scale('+s+')';
+   requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+}
+
+function finalStage(){
+  // сердце уже большое. НЕ трогаем scale вообще.
+  heartContainer.style.bottom='50%';
+
+  setTimeout(()=>{
+    heart.classList.add('final');
+    btn.classList.add('show');
+  },2600);
+}
+
+words.forEach((w,i)=>setTimeout(()=>animateWord(w,i),i*4500));
+
+
+btn.onclick=()=>{
+  btn.style.pointerEvents='none';
+  btn.style.opacity='0';
+
+  heartScaleEl.animate([
+    {transform:'scale('+scale+')'},
+    {transform:'scale('+(scale*1.15)+')'},
+    {transform:'scale('+(scale*0.95)+')'},
+    {transform:'scale('+(scale*1.35)+')'}
+  ],{
+    duration:800,
+    fill:'forwards'
+  });
+
+  setTimeout(()=>{
+    const fs=document.getElementById('flashSound');
+    if(fs){fs.currentTime=0;fs.play().catch(()=>{});}
+    document.getElementById('flash').classList.add('active');
+  },700);
+
+  setTimeout(()=>{
+    document.body.style.background='#fff';
+  },1200);
+
+  setTimeout(()=>{
+    window.location.href='page3.html';
+  },1800);
+};
+
+</script>
+</body>
+</html>

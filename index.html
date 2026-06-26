@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I LOVE YOU</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+min-height:100vh;
+background:#FFFFFF;
+overflow:hidden;
+font-family:Arial,sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+position:relative;
+}
+
+.background-text{
+position:fixed;
+inset:0;
+z-index:0;
+pointer-events:none;
+overflow:hidden;
+}
+
+.background-text span{
+position:absolute;
+font-family:"Circe Contrast","Arial Black",Impact,sans-serif;
+font-weight:900;
+font-size:clamp(90px,18vw,320px);
+color:#FF1493;
+opacity:.15;
+white-space:nowrap;
+}
+
+.t1{top:2%;left:-5%;transform:rotate(-10deg)}
+.t2{top:22%;right:-10%;transform:rotate(8deg)}
+.t3{top:45%;left:-8%;transform:rotate(5deg)}
+.t4{top:68%;right:-12%;transform:rotate(-8deg)}
+.t5{bottom:-2%;left:5%;transform:rotate(12deg)}
+
+.content{
+position:relative;
+z-index:2;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:20px;
+padding:20px;
+text-align:center;
+}
+
+.love-title{
+text-align:center;
+color:#FF1493;
+font-family:"Circe Contrast","Arial Black",sans-serif;
+font-size:clamp(24px,3vw,42px);
+line-height:1.2;
+font-weight:900;
+letter-spacing:1px;
+text-transform:uppercase;
+text-shadow:
+0 0 10px rgba(255,105,180,.3),
+0 0 20px rgba(255,20,147,.15);
+}
+
+.love-title span{
+display:block;
+margin-top:8px;
+font-size:clamp(16px,2vw,24px);
+font-weight:600;
+color:#FF69B4;
+text-transform:none;
+}
+
+img{
+max-width:80%;
+max-height:70vh;
+object-fit:contain;
+display:block;
+
+padding:12px;
+background:white;
+
+border:5px solid transparent;
+border-radius:30px;
+
+background-image:
+linear-gradient(white,white),
+linear-gradient(135deg,#FF69B4,#FFB6C1,#FF1493);
+
+background-origin:border-box;
+background-clip:padding-box,border-box;
+
+box-shadow:
+0 0 25px rgba(255,105,180,.25),
+0 0 50px rgba(255,20,147,.15);
+}
+
+.btn{
+display:inline-flex;
+align-items:center;
+gap:10px;
+padding:14px 30px;
+border:none;
+border-radius:999px;
+background:#FF69B4;
+color:white;
+font-size:18px;
+font-weight:600;
+cursor:pointer;
+transition:.25s;
+}
+
+.btn:hover{
+background:#FF1493;
+transform:scale(1.05);
+}
+</style>
+</head>
+<body>
+
+<div class="background-text">
+<span class="t1">I LOVE YOU</span>
+<span class="t2">I LOVE YOU</span>
+<span class="t3">I LOVE YOU</span>
+<span class="t4">I LOVE YOU</span>
+<span class="t5">I LOVE YOU</span>
+</div>
+
+<div class="content">
+<h1 class="love-title">
+СПЕЦИАЛЬНО ДЛЯ КАТИ
+<span>от тайного поклонника ❤️</span>
+</h1>
+
+<img src="photo.jpg" alt="Photo">
+
+<button class="btn" onclick="window.location.href='page2.html'" id="continueBtn">
+Продолжить ➜
+</button>
+</div>
+
+</body>
+</html>
